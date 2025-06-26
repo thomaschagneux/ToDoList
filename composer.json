@@ -23,8 +23,9 @@
         "symfony/monolog-bundle": "^3.7",
         "symfony/polyfill-apcu": "^1.0",
         "incenteev/composer-parameter-handler": "^2.0",
-        "symfony/security-bundle": "*",
-        "symfony/twig-bundle": "*"
+        "symfony/twig-bundle": "*",
+        "symfony/flex": "^2.7",
+        "symfony/security-bundle": "*"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.0",
@@ -50,6 +51,11 @@
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true
         }
     }
 }

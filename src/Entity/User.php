@@ -14,10 +14,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
-    #[ORM\Column(length: 180)]
-    private ?string $email = null;
+    #[ORM\Column(length: 180, nullable: false)]
+    private string $email;
 
     /**
      * @var list<string> The user roles
@@ -36,7 +36,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -55,7 +60,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        if (empty($this->email)) {
+            throw new \LogicException('Email cannot be empty.');
+        }
+
+        return $this->email;
     }
 
     /**

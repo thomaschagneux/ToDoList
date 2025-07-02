@@ -1,0 +1,12 @@
+parameters:
+    level: max
+    paths:
+        - bin/
+        - config/
+        - src/
+        - tests/
+    excludePaths:
+        - %currentWorkingDirectory%/src/Controller/TaskController.php
+        - %currentWorkingDirectory%/src/Form/UserType.php
+        - %currentWorkingDirectory%/src/Form/TaskType.php
+        - %currentWorkingDirectory%/src/Entity/Task.php

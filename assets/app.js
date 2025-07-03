@@ -1,13 +1,9 @@
 import './styles/app.css'; // ton CSS perso
-import $ from 'jquery';
 import 'bootstrap';
-
-// Make jQuery available globally
-window.$ = window.jQuery = $;
 
 console.log('App JS chargé');
 
-// Test jQuery is working
+// Test jQuery is working (jQuery is loaded from CDN in base.html.twig)
 $(function() {
     console.log('jQuery is loaded and working!');
 });

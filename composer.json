@@ -27,7 +27,9 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "symfony/dotenv": "^7.3",
         "symfony/asset-mapper": "^7.3",
-        "symfony/asset": "^7.3"
+        "symfony/asset": "^7.3",
+        "symfony/form": "^7.3",
+        "symfony/validator": "^7.3"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.63",
@@ -37,7 +39,9 @@
         "symfony/css-selector": "^7.3",
         "symfony/phpunit-bridge": "^7.3",
         "friendsofphp/php-cs-fixer": "^3.76",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "symfony/stopwatch": "^7.3",
+        "symfony/web-profiler-bundle": "^7.3"
     },
     "scripts": {
         "auto-scripts": {

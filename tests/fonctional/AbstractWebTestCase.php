@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Controller;
+namespace Tests\fonctional;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -10,10 +11,16 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class AbstractWebTestCase extends WebTestCase
 {
     protected KernelBrowser $client;
+
+    protected EntityManagerInterface $entityManager;
+
+    protected UserPasswordHasherInterface $userPasswordHasher;
 
     /**
      * @throws \Exception
@@ -27,6 +34,10 @@ class AbstractWebTestCase extends WebTestCase
         $application->setAutoExit(false);
 
         $output = new BufferedOutput();
+
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+
+        $this->userPasswordHasher = self::getContainer()->get(UserPasswordHasherInterface::class);
 
         $application->run(new ArrayInput([
             'command' => 'doctrine:database:drop',
@@ -45,6 +56,12 @@ class AbstractWebTestCase extends WebTestCase
             '--no-interaction' => true,
             '--env' => 'test',
         ]), $output);
+
+        $application->run(new ArrayInput([
+            'command' => 'doctrine:fixtures:load',
+            '--no-interaction' => true,
+            '--env' => 'test',
+        ]), $output);
     }
 
     protected function getEntityManager(): ObjectManager
@@ -52,7 +69,13 @@ class AbstractWebTestCase extends WebTestCase
         /** @var ManagerRegistry $registry */
         $registry = static::getContainer()->get('doctrine');
 
-        return $registry->getManager();
+        $em = $registry->getManager();
+
+        if (!$em->isOpen()) {
+            $em = $registry->resetManager();
+        }
+
+        return $em;
     }
 
     protected function createUser(string $email = 'test@example.com'): User
@@ -65,6 +88,20 @@ class AbstractWebTestCase extends WebTestCase
         $em = $this->getEntityManager();
         $em->persist($user);
         $em->flush();
+
+        return $user;
+    }
+
+    protected function createUserWithRole(array $role): User
+    {
+        $user = new User();
+        $user->setEmail('user@mail.com');
+        $user->setRoles($role);
+        $user->setUsername('user');
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, 'pass123'));
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return $user;
     }

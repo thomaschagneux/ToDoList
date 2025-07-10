@@ -13,7 +13,7 @@ reset-db:
 	php bin/console doctrine:migrations:migrate --no-interaction
 
 	@echo "Loading fixtures in dev database..."
-	#php bin/console doctrine:fixtures:load --no-interaction
+	php bin/console doctrine:fixtures:load --no-interaction
 
 reset-test-db:
 	@echo "Dropping the test database..."
@@ -26,7 +26,7 @@ reset-test-db:
 	php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
 	@echo "Loading fixtures in test database..."
-	#php bin/console doctrine:fixtures:load --env=test --no-interaction
+	php bin/console doctrine:fixtures:load --env=test --no-interaction
 
 clean:
 	clear
@@ -39,4 +39,4 @@ test:
 	clear
 	php bin/console cache:clear --env=test
 	php bin/console cache:warm --env=test
-	php vendor/bin/phpunit
+	php vendor/bin/phpunit --testdox

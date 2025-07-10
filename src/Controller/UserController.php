@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Security\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,7 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_list')]
     public function userList(): Response
     {
+        $this->denyAccessUnlessGranted(UserVoter::USER_LIST);
         $users = $this->userRepository->findAll();
 
         return $this->render('user/list.html.twig', [
@@ -34,6 +36,7 @@ class UserController extends AbstractController
     #[Route('/users/create', name: 'user_create')]
     public function userCreate(Request $request): Response
     {
+        $this->denyAccessUnlessGranted(UserVoter::USER_CREATE);
         $user = new User();
         $userCreateForm = $this->createForm(UserType::class, $user);
         $userCreateForm->handleRequest($request);
@@ -55,6 +58,8 @@ class UserController extends AbstractController
     #[Route('/users/{id}/edit', name: 'user_edit')]
     public function userEdit(User $user, Request $request): Response
     {
+        $this->denyAccessUnlessGranted(UserVoter::USER_EDIT, $user);
+
         $userEditForm = $this->createForm(UserType::class, $user);
         $userEditForm->handleRequest($request);
 

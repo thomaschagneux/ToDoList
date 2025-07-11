@@ -55,6 +55,5 @@ final class UserControllerTest extends AbstractWebTestCase
         ]);
 
         $this->assertFalse($form->isValid());
-
     }
 }

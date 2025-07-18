@@ -36,7 +36,9 @@ abstract class AbstractVoter extends Voter
 
     protected function isOwner(User $user, mixed $subject): bool
     {
-        return $user === $subject;
+        return is_object($subject)
+            && method_exists($subject, 'getUser')
+            && $subject->getUser() === $user;
     }
 
     protected function allowAll(): bool

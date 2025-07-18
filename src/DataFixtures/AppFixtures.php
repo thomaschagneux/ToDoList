@@ -2,9 +2,11 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Random\RandomException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -14,15 +16,23 @@ class AppFixtures extends Fixture
     ) {
     }
 
+    /**
+     * @throws RandomException
+     */
     public function load(ObjectManager $manager): void
     {
-        $this->loadUsers($manager);
+        $users = $this->loadUsers($manager);
+        $tasks = $this->loadTasks($manager);
 
         $manager->flush();
     }
 
-    private function loadUsers(ObjectManager $manager): void
+    /**
+     * @return array<User>
+     */
+    private function loadUsers(ObjectManager $manager): array
     {
+        $users = [];
         // Création d'un utilisateur admin
         $admin = new User();
         $admin->setEmail('admin@example.com');
@@ -32,6 +42,8 @@ class AppFixtures extends Fixture
             $this->passwordHasher->hashPassword($admin, 'pass123')
         );
         $manager->persist($admin);
+
+        $users[] = $admin;
 
         // Création d'utilisateurs standards
         $usersData = [
@@ -64,6 +76,7 @@ class AppFixtures extends Fixture
                 $this->passwordHasher->hashPassword($user, $userData['password'])
             );
             $manager->persist($user);
+            $users[] = $user;
         }
 
         // Création d'utilisateurs avec des données plus variées
@@ -76,6 +89,30 @@ class AppFixtures extends Fixture
                 $this->passwordHasher->hashPassword($user, 'pass123')
             );
             $manager->persist($user);
+            $users[] = $user;
         }
+
+        return $users;
+    }
+
+    /**
+     * @throws RandomException
+     */
+    private function loadTasks(ObjectManager $manager): array
+    {
+        $tasks = [];
+        for ($i = 0; $i < 20; ++$i) {
+            $randomBool = random_int(0, 100);
+            $task = new Task();
+            $task
+                ->setTitle("task{$i}")
+                ->setContent("task{$i}")
+                ->setIsDone(50 > $randomBool);
+
+            $manager->persist($task);
+            $tasks[] = $task;
+        }
+
+        return $tasks;
     }
 }

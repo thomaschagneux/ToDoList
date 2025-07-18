@@ -4,9 +4,8 @@
          bootstrap="tests/bootstrap.php"
          colors="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true"
-         verbose="true"
->
+         beStrictAboutOutputDuringTests="true">
+
     <testsuites>
         <testsuite name="Project Test Suite">
             <directory>tests</directory>

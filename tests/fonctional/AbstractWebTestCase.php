@@ -34,9 +34,17 @@ class AbstractWebTestCase extends WebTestCase
 
         $output = new BufferedOutput();
 
-        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        /** @var ManagerRegistry $registry */
+        $registry = static::getContainer()->get('doctrine');
 
-        $this->userPasswordHasher = self::getContainer()->get(UserPasswordHasherInterface::class);
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $registry->getManager();
+
+        $this->entityManager = $entityManager;
+
+        /** @var UserPasswordHasherInterface $userPasswordHasher */
+        $userPasswordHasher = static::getContainer()->get('security.user_password_hasher');
+        $this->userPasswordHasher = $userPasswordHasher;
 
         $application->run(new ArrayInput([
             'command' => 'doctrine:database:drop',
@@ -68,6 +76,7 @@ class AbstractWebTestCase extends WebTestCase
         /** @var ManagerRegistry $registry */
         $registry = static::getContainer()->get('doctrine');
 
+        /** @var EntityManagerInterface $em */
         $em = $registry->getManager();
 
         if (!$em->isOpen()) {
@@ -91,6 +100,9 @@ class AbstractWebTestCase extends WebTestCase
         return $user;
     }
 
+    /**
+     * @param list<string> $role
+     */
     protected function createUserWithRole(array $role): User
     {
         $user = new User();

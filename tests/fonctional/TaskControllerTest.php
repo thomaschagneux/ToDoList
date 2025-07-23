@@ -3,7 +3,7 @@
 namespace Tests\fonctional;
 
 use App\Entity\Task;
-use App\Form\TaskType;
+use App\Entity\User;
 
 final class TaskControllerTest extends AbstractWebTestCase
 {
@@ -43,7 +43,7 @@ final class TaskControllerTest extends AbstractWebTestCase
         $this->client->loginUser($user);
 
         $crawler = $this->client->request('GET', '/tasks/create');
-        $form = self::getContainer()->get('form.factory')->create(TaskType::class);
+
         $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => 'titre exemple',
             'task[content]' => 'contenu exemple',
@@ -73,7 +73,7 @@ final class TaskControllerTest extends AbstractWebTestCase
     public function testToggleTask(): void
     {
         $user = $this->createUserWithRole(['ROLE_USER']);
-        $task = $this->createTaskForUser($user, false);
+        $task = $this->createTaskForUser($user);
 
         $this->client->loginUser($user);
         $this->client->request('GET', '/tasks/'.$task->getId().'/toggle');
@@ -92,12 +92,12 @@ final class TaskControllerTest extends AbstractWebTestCase
         $this->assertResponseRedirects('/tasks');
     }
 
-    private function createTaskForUser($user, bool $isDone = false): Task
+    private function createTaskForUser(User $user): Task
     {
         $task = new Task();
         $task->setTitle('Tâche de test')
             ->setContent('Contenu')
-            ->setIsDone($isDone)
+            ->setIsDone(false)
             ->setUser($user);
 
         $this->entityManager->persist($task);

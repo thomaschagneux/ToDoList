@@ -5,6 +5,7 @@ namespace Tests\unit;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Security\TaskVoter;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -25,11 +26,11 @@ class TaskVoterTest extends TestCase
     {
         $task = new Task();
 
-        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_CREATE, null));
-        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_EDIT, $task));
-        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_DELETE, $task));
-        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_VIEW, $task));
-        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_LIST, null));
+        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_CREATE, null), 'TASK_CREATE should be supported without a Task subject');
+        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_EDIT, $task), 'TASK_EDIT should be supported with a Task subject');
+        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_DELETE, $task), 'TASK_DELETE should be supported with a Task subject');
+        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_VIEW, $task), 'TASK_VIEW should be supported with a Task subject');
+        $this->assertTrue($this->taskVoter->supports(TaskVoter::TASK_LIST, null), 'TASK_LIST should be supported without a Task subject');
     }
 
     public function testVoteGrantedForAdmin(): void
@@ -61,6 +62,9 @@ class TaskVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testVoteDeniedForNonOwner(): void
     {
         $owner = new User();
@@ -78,6 +82,9 @@ class TaskVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $vote);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testVoteDeniedIfNotLoggedIn(): void
     {
         $task = new Task();

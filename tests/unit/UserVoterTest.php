@@ -8,10 +8,9 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class UserVoterTestCase extends TestCase
+class UserVoterTest extends TestCase
 {
     private Security $security;
     private UserVoter $userVoter;
@@ -75,7 +74,7 @@ class UserVoterTestCase extends TestCase
 
         $vote = $this->userVoter->vote($token, $user, [UserVoter::USER_VIEW]);
 
-        $this->assertSame(Voter::ACCESS_GRANTED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
     /**

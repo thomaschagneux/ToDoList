@@ -42,7 +42,9 @@ class UserController extends AbstractController
         $userCreateForm->handleRequest($request);
 
         if ($userCreateForm->isSubmitted() && $userCreateForm->isValid()) {
-            $user->setPassword($this->userPasswordHasher->hashPassword($user, $user->getPassword()));
+            /** @var string $password */
+            $password = $user->getPassword();
+            $user->setPassword($this->userPasswordHasher->hashPassword($user, $password));
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();
@@ -64,7 +66,10 @@ class UserController extends AbstractController
         $userEditForm->handleRequest($request);
 
         if ($userEditForm->isSubmitted() && $userEditForm->isValid()) {
-            $user->setPassword($this->userPasswordHasher->hashPassword($user, $user->getPassword()));
+            /** @var string $password */
+            $password = $user->getPassword();
+
+            $user->setPassword($this->userPasswordHasher->hashPassword($user, $password));
             $this->entityManager->flush();
 
             return $this->redirectToRoute('user_list');

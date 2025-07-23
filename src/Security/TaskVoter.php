@@ -5,15 +5,18 @@ namespace App\Security;
 use App\Entity\Task;
 use App\Entity\User;
 
+/**
+ * @extends AbstractVoter<Task>
+ */
 class TaskVoter extends AbstractVoter
 {
-    public const string TASK_EDIT = 'TASK_EDIT';
-    public const string TASK_DELETE = 'TASK_DELETE';
-    public const string TASK_CREATE = 'TASK_CREATE';
-    public const string TASK_VIEW = 'TASK_VIEW';
-    public const string TASK_LIST = 'TASK_LIST';
+    public const TASK_EDIT = 'TASK_EDIT';
+    public const TASK_DELETE = 'TASK_DELETE';
+    public const TASK_CREATE = 'TASK_CREATE';
+    public const TASK_VIEW = 'TASK_VIEW';
+    public const TASK_LIST = 'TASK_LIST';
 
-    private const array ATTRIBUTES = [
+    private const ATTRIBUTES = [
         self::TASK_EDIT,
         self::TASK_DELETE,
         self::TASK_VIEW,
@@ -21,7 +24,7 @@ class TaskVoter extends AbstractVoter
         self::TASK_LIST,
     ];
 
-    private const array NO_SUBJECT_NEEDED = [
+    private const NO_SUBJECT_NEEDED = [
         self::TASK_LIST,
         self::TASK_CREATE,
     ];

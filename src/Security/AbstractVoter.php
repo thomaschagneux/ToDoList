@@ -7,6 +7,11 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @template TSubject
+ *
+ * @extends Voter<string, TSubject>
+ */
 abstract class AbstractVoter extends Voter
 {
     public function __construct(
@@ -36,6 +41,10 @@ abstract class AbstractVoter extends Voter
 
     protected function isOwner(User $user, mixed $subject): bool
     {
+        if ($subject instanceof User) {
+            return $subject === $user;
+        }
+
         return is_object($subject)
             && method_exists($subject, 'getUser')
             && $subject->getUser() === $user;

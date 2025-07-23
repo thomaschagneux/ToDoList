@@ -39,4 +39,4 @@ test:
 	clear
 	php bin/console cache:clear --env=test
 	php bin/console cache:warm --env=test
-	php vendor/bin/phpunit --testdox
+	php vendor/bin/phpunit --testdox --coverage-html var/reports/

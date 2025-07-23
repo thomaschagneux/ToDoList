@@ -4,15 +4,18 @@ namespace App\Security;
 
 use App\Entity\User;
 
+/**
+ * @extends AbstractVoter<User>
+ */
 class UserVoter extends AbstractVoter
 {
-    public const string USER_EDIT = 'USER_EDIT';
-    public const string USER_DELETE = 'USER_DELETE';
-    public const string USER_CREATE = 'USER_CREATE';
-    public const string USER_VIEW = 'USER_VIEW';
-    public const string USER_LIST = 'USER_LIST';
+    public const USER_EDIT = 'USER_EDIT';
+    public const USER_DELETE = 'USER_DELETE';
+    public const USER_CREATE = 'USER_CREATE';
+    public const USER_VIEW = 'USER_VIEW';
+    public const USER_LIST = 'USER_LIST';
 
-    private const array ATTRIBUTES = [
+    private const ATTRIBUTES = [
         self::USER_EDIT,
         self::USER_DELETE,
         self::USER_VIEW,
@@ -20,7 +23,7 @@ class UserVoter extends AbstractVoter
         self::USER_LIST,
     ];
 
-    private const array NO_SUBJECT_NEEDED = [
+    private const NO_SUBJECT_NEEDED = [
         self::USER_LIST,
         self::USER_CREATE,
     ];

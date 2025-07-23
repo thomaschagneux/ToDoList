@@ -3,6 +3,7 @@
 namespace Tests\fonctional;
 
 use App\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class LoginControllerTest extends AbstractWebTestCase
 {
@@ -18,6 +19,8 @@ class LoginControllerTest extends AbstractWebTestCase
     private function createTestUser(): User
     {
         $container = static::getContainer();
+
+        /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = $container->get('security.user_password_hasher');
 
         $user = new User();
@@ -119,6 +122,9 @@ class LoginControllerTest extends AbstractWebTestCase
 
         $this->client->followRedirect();
 
-        $this->assertSelectorExists('input[name="_username"]', 'value', 'test@example.com');
+        $this->assertSelectorExists('input[name="_username"]');
+
+        $usernameInput = $this->client->getCrawler()->filter('input[name="_username"]');
+        $this->assertEquals('test@example.com', $usernameInput->attr('value'), 'The username should persist on error.');
     }
 }

@@ -17,6 +17,9 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
+    /**
+     * @return Task[]
+     */
     public function getTasksByUser(User $user): array
     {
         $qb = $this
@@ -25,6 +28,10 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->orderBy('t.createdAt', 'DESC');
 
-        return $qb->getQuery()->getResult();
+        $result = $qb->getQuery()->getResult();
+
+        return is_array($result) ? array_filter($result, function ($task) {
+            return $task instanceof Task;
+        }) : [];
     }
 }

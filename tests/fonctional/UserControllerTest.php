@@ -2,8 +2,6 @@
 
 namespace Tests\fonctional;
 
-use App\Form\UserType;
-
 final class UserControllerTest extends AbstractWebTestCase
 {
     public function testIndexWithUserConnected(): void
@@ -45,15 +43,18 @@ final class UserControllerTest extends AbstractWebTestCase
         $user = $this->createUserWithRole(['ROLE_USER']);
         $this->client->loginUser($user);
 
-        $this->client->request('GET', '/users/create');
-        $form = self::getContainer()->get('form.factory')->create(UserType::class);
-        $form->submit([
+        $crawler = $this->client->request('GET', '/users/create');
+
+        $form = $crawler->selectButton('Ajouter')->form();
+        $this->client->submit($form, [
             'user[username]' => 'nouveau_user',
             'user[password][first]' => 'password123',
             'user[password][second]' => 'password123',
             'user[email]' => 'test-create@example.com',
         ]);
 
-        $this->assertFalse($form->isValid());
+        $this->client->followRedirect();
+
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
     }
 }

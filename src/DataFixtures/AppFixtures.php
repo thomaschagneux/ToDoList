@@ -96,6 +96,8 @@ class AppFixtures extends Fixture
     }
 
     /**
+     * @return array<Task>
+     *
      * @throws RandomException
      */
     private function loadTasks(ObjectManager $manager): array
